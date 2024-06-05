@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "mod": "github:PhrontHQ/mod#mod",
-    "app-infrastructure-data.mod": "github:PhrontHQ/app-infrastructure-data.mod#main",
     "@azure/msal-browser": "^3.14.0"
   },
   "devDependencies": {
