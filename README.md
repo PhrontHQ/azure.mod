@@ -1,6 +1,6 @@
-# ms-identity.mod
+# azure.mod
 
-Mod allowing to build live-apps using Microsoft Identity solutions
+Mod allowing to build live-apps using Microsoft's Azure Cloud
 
 
 See:
