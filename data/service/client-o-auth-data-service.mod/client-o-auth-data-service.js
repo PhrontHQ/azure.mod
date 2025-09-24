@@ -1,0 +1,92 @@
+const ModClientOAuthDataService = require("mod/data/service/client-o-auth-data-service.mod/client-o-auth-data-service").ClientOAuthDataService,
+    Montage = require('mod/core/core').Montage;
+const { PublicClientApplication } = require("@azure/msal-browser");
+
+/**
+* 
+* Doc to look at to implement handling refresh tokens:
+*  https://developer.whoop.com/docs/tutorials/refresh-token-javascript/
+*
+* @class
+* @extends Mod's ClientOAuthDataService
+*/
+exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientOAuthDataService {/** @lends ClientOAuthDataService */
+
+
+    /***************************************************************************
+     * Initializing
+     */
+
+    constructor() {
+        super();
+        this.accountId = "";
+        this.responseAccount = null;
+        return this;
+    }
+
+    static {
+
+        Montage.defineProperties(this.prototype, {
+            apiVersion: {
+                value: "FROM AWS, NECESSARY FOR GCP?"
+            }
+        });
+    }
+
+    async handleReadOperation(readOperation) {
+        this.msalInstance = new PublicClientApplication(this.connectionDescriptor);
+
+        try {
+            await this.msalInstance.initialize();
+            await this.msalInstance.handleRedirectPromise().then(this._handleAuthResponse);
+
+            const userAccount = this.msalInstance.getAllAccounts()[0];
+
+            if (!userAccount) {
+                throw new Error("No user account found");
+            }
+
+            
+        } catch (error) {
+            console.error("Sign in failed:", error.message || error);
+            throw error;
+        }
+
+        super.handleReadOperation(readOperation);
+
+        let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, null, this.responseAccount);
+        responseOperation.target.dispatchEvent(responseOperation);
+    }
+
+    _handleAuthResponse = async (response) => {
+        const loginRequest = {
+            scopes: ["User.Read"]
+        };
+        try {
+            if (response?.account) {
+                // Store account ID from successful auth response
+                this.accountId = response.account.homeAccountId;
+                this.responseAccount = [response.account];
+            } else {
+                const currentAccounts = this.msalInstance.getAllAccounts();
+
+                if (currentAccounts.length === 0) {
+                    // No accounts found - redirect user to login page
+
+                    await this.msalInstance.loginRedirect(loginRequest);
+                } else if (currentAccounts.length > 1) {
+                    // Multiple accounts - We need user selection
+                    // TODO: Add choose account code here
+                    console.warn("Multiple accounts detected");
+                } else {
+                    // Single account - Store account ID
+                    this.accountId = currentAccounts[0].homeAccountId;
+                }
+            }
+        } catch (error) {
+            console.error("Error handling response:", error);
+            throw error;
+        }
+    };
+
+}
