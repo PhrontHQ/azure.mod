@@ -1,0 +1,11 @@
+{
+    "root": {
+        "value": [
+            {"@": "UserIdentityMapping"}
+        ]
+    },
+
+    "UserIdentityMapping": {
+        "object": "./client-o-auth-data-service.mod/mapping/authentication/user-identity-mapping.mjson"
+    }
+}

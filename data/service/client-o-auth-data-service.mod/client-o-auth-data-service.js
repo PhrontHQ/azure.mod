@@ -36,31 +36,34 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
     async handleReadOperation(readOperation) {
         this.msalInstance = new PublicClientApplication(this.connectionDescriptor);
 
+        let userAccount, readOperationError;
         try {
             await this.msalInstance.initialize();
             await this.msalInstance.handleRedirectPromise().then(this._handleAuthResponse);
 
-            const userAccount = this.msalInstance.getAllAccounts()[0];
+            userAccount = this.msalInstance.getAllAccounts()[0];
 
             if (!userAccount) {
-                throw new Error("No user account found");
+                readOperationError =  new Error("No user account found");
             }
 
             
         } catch (error) {
             console.error("Sign in failed:", error.message || error);
-            throw error;
+            readOperationError = error;
         }
 
-        super.handleReadOperation(readOperation);
+        //super.handleReadOperation(readOperation);
 
-        let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, null, this.responseAccount);
+        let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
         responseOperation.target.dispatchEvent(responseOperation);
     }
 
     _handleAuthResponse = async (response) => {
         const loginRequest = {
-            scopes: ["User.Read"]
+            scopes: /*["User.Read"]*/
+                    ["openid", "profile", "User.Read", "email"]
+
         };
         try {
             if (response?.account) {

@@ -1,0 +1,11 @@
+{
+    "root": {
+        "value": [
+            {"@": "UserIdentityMapping"}
+        ]
+    },
+
+    "UserIdentityMapping": {
+        "object": "./mapping/app/user-identity-mapping.mjson"
+    }
+}

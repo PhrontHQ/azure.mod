@@ -1,0 +1,21 @@
+{
+    "root": {
+        "prototype": "./client-o-auth-data-service.mod",
+        "values": {
+            "identifier": "AzureClientOAuthDataService",
+            "name": "AzureClientOAuthDataService",
+            "exportName": "ClientOAuthDataService",
+             "types": [
+                {"@": "UserIdentityDescriptor"}
+            ],
+            "mappings": {"@": "Mappings"} 
+        }
+    },
+    "UserIdentityDescriptor": {
+        "object": "mod/data/model/app/user-identity.mjson"
+    },
+
+    "Mappings": {
+        "object": "./client-o-auth-data-service-mappings.mjson"
+    }
+}

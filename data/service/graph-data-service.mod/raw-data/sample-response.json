@@ -1,0 +1,81 @@
+{
+    "authority": "https://login.microsoftonline.com/c990bb7a-51f4-439b-bd36-9c07fb1041c0/",
+    "uniqueId": "d6fddbc9-203c-46ca-bee5-46c28eca1fa5",
+    "tenantId": "c990bb7a-51f4-439b-bd36-9c07fb1041c0",
+    "scopes": [
+        "openid",
+        "profile",
+        "User.Read",
+        "email"
+    ],
+    "account": {
+        "homeAccountId": "d6fddbc9-203c-46ca-bee5-46c28eca1fa5.c990bb7a-51f4-439b-bd36-9c07fb1041c0",
+        "environment": "login.windows.net",
+        "tenantId": "c990bb7a-51f4-439b-bd36-9c07fb1041c0",
+        "username": "MHIPP6@ford.com",
+        "localAccountId": "d6fddbc9-203c-46ca-bee5-46c28eca1fa5",
+        "name": "Hipp, Maxwell (M.)",
+        "authorityType": "MSSTS",
+        "tenantProfiles": [
+            [
+                "c990bb7a-51f4-439b-bd36-9c07fb1041c0",
+                {
+                    "tenantId": "c990bb7a-51f4-439b-bd36-9c07fb1041c0",
+                    "localAccountId": "d6fddbc9-203c-46ca-bee5-46c28eca1fa5",
+                    "name": "Hipp, Maxwell (M.)",
+                    "isHomeTenant": true
+                }
+            ]
+        ],
+        "idTokenClaims": {
+            "aud": "1bbebdb7-ad75-4e2a-b265-5adbc0f308ad",
+            "iss": "https://login.microsoftonline.com/c990bb7a-51f4-439b-bd36-9c07fb1041c0/v2.0",
+            "iat": 1755043523,
+            "nbf": 1755043523,
+            "exp": 1755047423,
+            "aio": "AcQAO/8ZAAAAzRvYtsuXFDhDZ3HpSBAcN9CjUPBDnhq2sdN1s6gAY+pkDvyfJw7ZfjurvsjGoUcroY+p166WLxKZJwdItTQr477nkl1hTXyceSRLmwYZay4/8HjRNHUa8ULek1B5G2M1SCL8ucxTxtsbzK5M6L8UUfMnEWo/jJxPCYiuZjig8TykVrzJIfDBp2g+1xp6iMB2kgAPRZU+HtnL418CZeIEynFvEg2+SLEzBPm8KIHt11e7U4mlBf4hk7C45ClAYcAo",
+            "name": "Hipp, Maxwell (M.)",
+            "nonce": "0198a0c3-6fb9-7753-bcf8-2de6ca935d75",
+            "oid": "d6fddbc9-203c-46ca-bee5-46c28eca1fa5",
+            "preferred_username": "MHIPP6@ford.com",
+            "rh": "1.ARIAeruQyfRRm0O9NpwH-xBBwLe9vht1rSpOsmVa28DzCK0SAHsSAA.",
+            "sid": "003d8619-b567-df80-b3f0-a3c4a61e4f16",
+            "sub": "B1po15WUPBreckgFQiZ4i0RrkrYLuJi6itHN4qp6WCQ",
+            "tid": "c990bb7a-51f4-439b-bd36-9c07fb1041c0",
+            "uti": "YcJAzTQquEiP5JU56sIrAA",
+            "ver": "2.0"
+        },
+        "idToken": "idTokenValue"
+    },
+    "idToken": "idTokenValue",
+    "idTokenClaims": {
+        "aud": "1bbebdb7-ad75-4e2a-b265-5adbc0f308ad",
+        "iss": "https://login.microsoftonline.com/c990bb7a-51f4-439b-bd36-9c07fb1041c0/v2.0",
+        "iat": 1755043523,
+        "nbf": 1755043523,
+        "exp": 1755047423,
+        "aio": "AcQAO/8ZAAAAzRvYtsuXFDhDZ3HpSBAcN9CjUPBDnhq2sdN1s6gAY+pkDvyfJw7ZfjurvsjGoUcroY+p166WLxKZJwdItTQr477nkl1hTXyceSRLmwYZay4/8HjRNHUa8ULek1B5G2M1SCL8ucxTxtsbzK5M6L8UUfMnEWo/jJxPCYiuZjig8TykVrzJIfDBp2g+1xp6iMB2kgAPRZU+HtnL418CZeIEynFvEg2+SLEzBPm8KIHt11e7U4mlBf4hk7C45ClAYcAo",
+        "name": "Hipp, Maxwell (M.)",
+        "nonce": "0198a0c3-6fb9-7753-bcf8-2de6ca935d75",
+        "oid": "d6fddbc9-203c-46ca-bee5-46c28eca1fa5",
+        "preferred_username": "MHIPP6@ford.com",
+        "rh": "1.ARIAeruQyfRRm0O9NpwH-xBBwLe9vht1rSpOsmVa28DzCK0SAHsSAA.",
+        "sid": "003d8619-b567-df80-b3f0-a3c4a61e4f16",
+        "sub": "B1po15WUPBreckgFQiZ4i0RrkrYLuJi6itHN4qp6WCQ",
+        "tid": "c990bb7a-51f4-439b-bd36-9c07fb1041c0",
+        "uti": "YcJAzTQquEiP5JU56sIrAA",
+        "ver": "2.0"
+    },
+    "accessToken": "accessTokenValue",
+    "fromCache": false,
+    "expiresOn": "2025-08-13T01:37:51.000Z",
+    "extExpiresOn": "2025-08-13T03:05:19.000Z",
+    "correlationId": "0198a0c3-6fb7-7afb-9b1e-fdebfa4cb286",
+    "requestId": "cd40c261-2a34-48b8-8fe4-9539eac22b00",
+    "familyId": "",
+    "tokenType": "Bearer",
+    "state": "",
+    "cloudGraphHostName": "",
+    "msGraphHost": "",
+    "fromNativeBroker": false
+}

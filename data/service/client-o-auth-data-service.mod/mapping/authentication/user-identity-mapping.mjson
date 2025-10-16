@@ -1,0 +1,47 @@
+{
+    "root": {
+        "prototype": "mod/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "UserIdentityDescriptor"},
+            "rawDataPrimaryKeys":["{localAccountId: localAccountId, tenantId: tenantId}"],
+            "objectMapping": {
+                "rules": {
+                    "username": {"<->": "username"},
+                    "session": {"<-": "signInUserSession"},
+                    "isAuthenticated": {"<-": "homeAccountId.defined()"},
+                    "email": {"<->": "username"},
+                    "person": {
+                        "<->": "{localAccountId: localAccountId, tenantId: tenantId}",
+                        "converter": {"@": "person-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                    "confirmationCode": {"<-": "accountConfirmationCode"},
+                    "password": {"<-": "password"}
+                }
+            },
+            "requisitePropertyNames": [
+                "username","isAuthenticated","email"
+            ]
+        }
+    },
+
+    "timeZoneConverter": {
+        "prototype": "mod/data/converter/time-zone-identifier-to-time-zone-converter"
+    },
+
+    "UserIdentityDescriptor": {
+        "object": "mod/data/model/app/user-identity.mjson"
+    },
+
+
+    "person-converter": {
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "userIdentityIds.has($)"
+        }
+    }
+
+}

@@ -1,0 +1,21 @@
+{
+    "root": {
+        "prototype": "./graph-data-service.mod",
+        "values": {
+            "identifier": "AzureGraphDataService",
+            "name": "GraphDataService",
+            "exportName": "GraphDataService",
+             "types": [
+                {"@": "PersonDescriptor"}
+            ],
+            "mappings": {"@": "Mappings"} 
+        }
+    },
+    "PersonDescriptor": {
+        "object": "mod/data/model/party/person.mjson"
+    },
+
+    "Mappings": {
+        "object": "./graph-data-service-mappings.mjson"
+    }
+}
