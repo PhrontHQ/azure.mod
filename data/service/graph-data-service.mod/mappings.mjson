@@ -1,0 +1,11 @@
+{
+    "root": {
+        "value": [
+            {"@": "PersonMapping"}
+        ]
+    },
+
+    "PersonMapping": {
+        "object": "./mapping/party/person-mapping.mjson"
+    }
+}

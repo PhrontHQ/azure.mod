@@ -1,0 +1,47 @@
+{
+    "root": {
+        "prototype": "mod/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PersonDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "objectMapping": {
+                "rules": {
+                    "username": {"<->": "account.username"},
+                    "session": {"<-": "signInUserSession"},
+                    "isAuthenticated": {"<-": "account.defined()"},
+                    "email": {"<->": "account.username"},
+                    "person": {
+                        "<->": "{originAccountId: account.localAccountId, originAccountTenantId: account.tenantId}",
+                        "converter": {"@": "person-converter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                    "confirmationCode": {"<-": "accountConfirmationCode"},
+                    "password": {"<-": "password"}
+                }
+            },
+            "requisitePropertyNames": [
+                "username","isAuthenticated","email"
+            ]
+        }
+    },
+
+    "timeZoneConverter": {
+        "prototype": "mod/data/converter/time-zone-identifier-to-time-zone-converter"
+    },
+
+    "PersonDescriptor": {
+        "object": "mod/data/model/party/person.mjson"
+    },
+
+
+    "person-converter": {
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "userIdentityIds.has($)"
+        }
+    }
+
+}
