@@ -6,6 +6,8 @@ const { PublicClientApplication } = require("@azure/msal-browser");
 * 
 * Doc to look at to implement handling refresh tokens:
 *  https://developer.whoop.com/docs/tutorials/refresh-token-javascript/
+* 
+* https://learn.microsoft.com/en-us/entra/msal/javascript/browser/initialization
 *
 * @class
 * @extends Mod's ClientOAuthDataService
@@ -61,7 +63,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
 
     _handleAuthResponse = async (response) => {
         const loginRequest = {
-            scopes: /*["User.Read"]*/
+            scopes: /*["User.Read"] - "User.ReadWrite"*/
                     ["openid", "profile", "User.Read", "email"]
 
         };
@@ -69,7 +71,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             if (response?.account) {
                 // Store account ID from successful auth response
                 this.accountId = response.account.homeAccountId;
-                this.responseAccount = [response.account];
+                this.responseAccount = response.account;
             } else {
                 const currentAccounts = this.msalInstance.getAllAccounts();
 
@@ -78,7 +80,15 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
 
                     await this.msalInstance.loginRedirect(loginRequest);
                 } else if (currentAccounts.length > 1) {
-                    // Multiple accounts - We need user selection
+                    // Multiple accounts - We need user selection.
+                    /*
+                        When the query for userIdentity returns more than one object, the authentication managent components
+                        will get us a selection.
+
+                        That selection will become the session's userIdentity.
+                        Then a subsequent fetch should trigger a fetch for an OAuthAccessToken
+                        
+                    */
                     // TODO: Add choose account code here
                     console.warn("Multiple accounts detected");
                 } else {
@@ -86,6 +96,20 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
                     this.accountId = currentAccounts[0].homeAccountId;
                 }
             }
+
+            // this.msalInstance.acquireTokenSilent(loginRequest).then(tokenResponse => {
+            //         // Do something with the tokenResponse
+            //         console.warn("tokenResponse response is ", tokenResponse);
+
+            // }).catch(error => {
+            //     if (error instanceof InteractionRequiredAuthError) {
+            //         // fallback to interaction when silent call fails
+            //         return msalInstance.acquireTokenRedirect(request)
+            //     }
+
+            //     // handle other errors
+            // });
+
         } catch (error) {
             console.error("Error handling response:", error);
             throw error;
