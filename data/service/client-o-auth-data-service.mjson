@@ -5,9 +5,6 @@
             "identifier": "AzureClientOAuthDataService",
             "name": "AzureClientOAuthDataService",
             "exportName": "ClientOAuthDataService",
-             "types": [
-                {"@": "UserIdentityDescriptor"}
-            ],
             "mappings": {"@": "Mappings"} 
         }
     },
