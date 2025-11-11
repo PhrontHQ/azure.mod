@@ -1,6 +1,6 @@
 const ModClientOAuthDataService = require("mod/data/service/client-o-auth-data-service.mod/client-o-auth-data-service").ClientOAuthDataService,
     Montage = require('mod/core/core').Montage;
-const { PublicClientApplication } = require("@azure/msal-browser");
+const { PublicClientApplication, InteractionRequiredAuthError } = require("@azure/msal-browser");
 
 /**
 * 
@@ -31,23 +31,103 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
         Montage.defineProperties(this.prototype, {
             apiVersion: {
                 value: "FROM AWS, NECESSARY FOR GCP?"
+            },
+            __msalInstancePromise: {
+                value:undefined
+            },
+            _msalInstance: {
+                value:undefined
             }
         });
     }
 
-    async handleReadOperation(readOperation) {
-        this.msalInstance = new PublicClientApplication(this.connectionDescriptor);
+    get _msalInstancePromise() {
+        if(!this.__msalInstancePromise) {
+            let msalInstance = new PublicClientApplication(this.connectionDescriptor);
+            this._msalInstance = msalInstance;
+            this.__msalInstancePromise = msalInstance.initialize()
+            .then((resolvedInitialization) => {
+                return msalInstance.handleRedirectPromise()
+                .then(this._handleAuthResponse)
+                .then((_handleAuthResponseResolved) => {
+                    return msalInstance;
+                });
+
+            })
+        }
+        return this.__msalInstancePromise;
+    }
+
+    handleUserIdentityReadOperation(readOperation) {
+        let readOperationCompletionPromise;
+
+        /*
+            This gives a chance to the delegate to do something async by returning a Promise from rawDataServiceWillHandleReadOperation(readOperation).
+            When that promise resolves, then we check if readOperation.defaultPrevented, if yes, the we don't handle it, otherwise we proceed.
+
+            Wonky, WIP: needs to work without a delegate actually implementing it.
+            And a RawDataService shouldn't know about all that boilerplate
+
+            Note: If there was a default delegate shared that would implement rawDataServiceWillHandleReadOperation by returning Promise.resolve(readOperation)
+            it might be simpler, but probably a bit less efficient
+
+        */
+        readOperationCompletionPromise = this.callDelegateMethod("rawDataServiceWillHandleReadOperation", this, readOperation);
+        if(readOperationCompletionPromise) {
+            readOperationCompletionPromise = readOperationCompletionPromise.then((readOperation) => {
+                if(!readOperation.defaultPrevented) {
+                    this._handleUserIdentityReadOperation(readOperation);
+                }
+            });
+        } else {
+            this._handleUserIdentityReadOperation(readOperation);
+        }
+
+        //If we've been asked to return a promise for the read Completion Operation, we do so. Again, this is fragile. IT HAS TO MOVE UP TO RAW DATA SERVICE
+        //WE CAN'T RELY ON INDIVIDUAL DATA SERVICE IMPLEMENTORS TO KNOW ABOUT THAT...
+        if(this.promisesReadCompletionOperation) {
+            return readOperationCompletionPromise;
+        }
+
+    }
+
+
+    _handleUserIdentityReadOperation(readOperation) {
+        // this.msalInstance = new PublicClientApplication(this.connectionDescriptor);
 
         let userAccount, readOperationError;
         try {
-            await this.msalInstance.initialize();
-            await this.msalInstance.handleRedirectPromise().then(this._handleAuthResponse);
+            // await this.msalInstance.initialize();
+            // await this.msalInstance.handleRedirectPromise().then(this._handleAuthResponse);
 
-            userAccount = this.msalInstance.getAllAccounts()[0];
+            this._msalInstancePromise.then((msalInstance) => {
 
-            if (!userAccount) {
-                readOperationError =  new Error("No user account found");
-            }
+                /*
+                    userAccount.idTokenClaims is described here:
+                        https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference
+
+                        
+                */
+
+                userAccount = this._msalInstance.getAllAccounts()[0];
+                if (!userAccount) {
+                    readOperationError = new Error("No user account found");
+                }
+            })
+            .catch((error) => {
+                console.error("Sign in failed:", error.message || error);
+                readOperationError = error;
+            })
+            .finally(() => {
+                let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
+                responseOperation.target.dispatchEvent(responseOperation);
+            })
+
+            // userAccount = this.msalInstance.getAllAccounts()[0];
+
+            // if (!userAccount) {
+            //     readOperationError =  new Error("No user account found");
+            // }
 
             
         } catch (error) {
@@ -57,8 +137,8 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
 
         //super.handleReadOperation(readOperation);
 
-        let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
-        responseOperation.target.dispatchEvent(responseOperation);
+        // let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
+        // responseOperation.target.dispatchEvent(responseOperation);
     }
 
     _handleAuthResponse = async (response) => {
@@ -73,12 +153,12 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
                 this.accountId = response.account.homeAccountId;
                 this.responseAccount = response.account;
             } else {
-                const currentAccounts = this.msalInstance.getAllAccounts();
+                const currentAccounts = this._msalInstance.getAllAccounts();
 
                 if (currentAccounts.length === 0) {
                     // No accounts found - redirect user to login page
 
-                    await this.msalInstance.loginRedirect(loginRequest);
+                    await this._msalInstance.loginRedirect(loginRequest);
                 } else if (currentAccounts.length > 1) {
                     // Multiple accounts - We need user selection.
                     /*
@@ -97,14 +177,14 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
                 }
             }
 
-            // this.msalInstance.acquireTokenSilent(loginRequest).then(tokenResponse => {
+            // this._msalInstance.acquireTokenSilent(loginRequest).then(tokenResponse => {
             //         // Do something with the tokenResponse
             //         console.warn("tokenResponse response is ", tokenResponse);
 
             // }).catch(error => {
             //     if (error instanceof InteractionRequiredAuthError) {
             //         // fallback to interaction when silent call fails
-            //         return msalInstance.acquireTokenRedirect(request)
+            //         return this._msalInstance.acquireTokenRedirect(request)
             //     }
 
             //     // handle other errors
@@ -115,5 +195,83 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             throw error;
         }
     };
+
+
+    handleOAuthAccessTokenReadOperation(readOperation) {
+        let readOperationCompletionPromise;
+
+        /*
+            This gives a chance to the delegate to do something async by returning a Promise from rawDataServiceWillHandleReadOperation(readOperation).
+            When that promise resolves, then we check if readOperation.defaultPrevented, if yes, the we don't handle it, otherwise we proceed.
+
+            Wonky, WIP: needs to work without a delegate actually implementing it.
+            And a RawDataService shouldn't know about all that boilerplate
+
+            Note: If there was a default delegate shared that would implement rawDataServiceWillHandleReadOperation by returning Promise.resolve(readOperation)
+            it might be simpler, but probably a bit less efficient
+
+        */
+        readOperationCompletionPromise = this.callDelegateMethod("rawDataServiceWillHandleReadOperation", this, readOperation);
+        if(readOperationCompletionPromise) {
+            readOperationCompletionPromise = readOperationCompletionPromise.then((readOperation) => {
+                if(!readOperation.defaultPrevented) {
+                    this._handleOAuthAccessTokenReadOperation(readOperation);
+                }
+            });
+        } else {
+            this._handleOAuthAccessTokenReadOperation(readOperation);
+        }
+
+        //If we've been asked to return a promise for the read Completion Operation, we do so. Again, this is fragile. IT HAS TO MOVE UP TO RAW DATA SERVICE
+        //WE CAN'T RELY ON INDIVIDUAL DATA SERVICE IMPLEMENTORS TO KNOW ABOUT THAT...
+        if(this.promisesReadCompletionOperation) {
+            return readOperationCompletionPromise;
+        }
+
+    }
+
+    _handleOAuthAccessTokenReadOperation(readOperation) {
+
+        //TODO: The scopes should be part of the readOperation's criteria
+
+        let accessTokenRawData, readOperationError;
+
+        this._msalInstancePromise.then((msalInstance) => {
+            const accessTokenRequest = {
+                scopes: /*["User.Read"] - "User.ReadWrite"*/
+                        ["openid", "profile", "User.Read", "email"],
+                account: this._msalInstance.getAllAccounts()[0],
+                redirectUri: this.connectionDescriptor.auth.redirectURI
+            };
+
+            return this._msalInstance.acquireTokenSilent(accessTokenRequest)
+        })
+        .then(tokenResponse => {
+                // Do something with the tokenResponse
+                accessTokenRawData = tokenResponse;
+                console.warn("tokenResponse response is ", tokenResponse);
+                return accessTokenRawData;
+        })
+        .catch(error => {
+            readOperationError = error;
+            if (error instanceof InteractionRequiredAuthError) {
+                // fallback to interaction when silent call fails
+                return this._msalInstance.acquireTokenRedirect(request)
+                .then(tokenResponse => {
+                    // Do something with the tokenResponse
+                    accessTokenRawData = tokenResponse;
+                    console.warn("tokenResponse response is ", tokenResponse);
+                    return accessTokenRawData;
+                })
+
+            }
+
+            // handle other errors
+        })
+        .finally(() => {
+            let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
+            responseOperation.target.dispatchEvent(responseOperation);
+        });
+    }
 
 }

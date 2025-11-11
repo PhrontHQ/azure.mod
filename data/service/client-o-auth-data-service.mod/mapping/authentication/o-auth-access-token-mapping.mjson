@@ -1,0 +1,121 @@
+{
+    "root": {
+        "prototype": "mod/data/service/fetch-resource-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "OAuthAccessTokenDescriptor"},
+            "rawDataPrimaryKeys":["accessToken"],
+            "objectMapping": {
+                "rules": {
+                    "identity": {"<->": "^identity"},
+                    "isReadOnly": {"<-": "true"},
+                    "accessToken": {"<->": "accessToken"},
+                    "tokenType": {"<->": "tokenType"},
+                    "expirationDate": {"<->": "expiresOn"},
+                    "refreshToken": {"<->": "refreshToken || null"},
+                    "refreshExpirationDate": {"<->": "extExpiresOn || null"},
+                    "idToken": {"<->": "idToken || null"}
+                }
+            },
+            "requisitePropertyNames": [
+                "identity", "isReadOnly", "accessToken","tokenType","validityDuration"
+            ],
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "fetchRequestMappingByOperationType": {"@":"fetchRequestMappingByOperationType"},
+            "fetchResponseRawDataMappingExpressionByCriteria": {"@":"fetchResponseRawDataMappingExpressionByCriteria"}
+        }
+    },
+
+    "Criteria": {
+        "object": "mod/core/criteria"
+    },
+
+    "Date": {
+        "object": "global[Date]"
+    },
+
+
+    "OAuthAccessTokenDescriptor": {
+        "object": "mod/data/model/authentication/o-auth-access-token.mjson",
+        "values": {
+            "mutabilityCriteria": "@Criteria.thatEvaluatesToFalse"
+          }
+    },
+
+    "DataOperation": {
+        "object": "mod/data/service/data-operation"
+    },
+
+    "tokenReadDataOperationCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+          "expression": "criteria.qualifiedProperties.length == 1 && criteria.qualifiedProperties.has('identity')"
+        }
+    },
+
+    "fetchRequestMappingByOperationType": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "readOperationMappingEntry"}
+            ]
+        }
+    },
+    "readOperationMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"=": "@DataOperation.Type.ReadOperation"},
+            "value":
+                {"@": "fetchRequestMappingByCriteria"}
+        }
+    },
+
+    "fetchRequestMappingByCriteria": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "fetchTokenRequestMappingRulesEntry"}
+            ]
+        }
+    },
+
+    "fetchTokenRequestMappingRulesEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"@": "tokenReadDataOperationCriteria"},
+            "value": {
+                "url": {"<-": "^.connection.baseURL"},
+                "method": {"<-": "'POST'"},
+                "headers":  {"<-": "{Content-Type: 'application/x-www-form-urlencoded'}"},
+                "body": {"<-": "{client_id:criteria.parameters.applicationIdentifier, client_secret:criteria.parameters.applicationCredentials, grant_type:'client_credentials',resource:'urn:gspas_sync_plans:resource:api_gspas_operation_service:prod'}"}
+            } 
+        }
+    },
+
+    "fetchResponseRawDataMappingExpressionByCriteria": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "accessTokenResponseMappingEntry"}
+            ]
+        }
+    },
+
+    "accessTokenResponseCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+          "expression": "access_token.defined()"
+        }
+    },
+
+    "accessTokenResponseMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"@": "accessTokenResponseCriteria"},
+            "value": "this"
+        }
+    }
+
+}

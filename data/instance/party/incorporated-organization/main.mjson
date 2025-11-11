@@ -1,0 +1,16 @@
+
+{
+    "root": {
+        "value": [
+           {"@": "Microsoft"}
+        ]
+    },
+
+    "Microsoft": {
+        "prototype": "mod/data/model/party/incorporated-organization",
+        "values": {
+            "identifier": "0199b9d8-f1e9-7c71-b7d0-169647fedcc9",
+            "name": "Microsoft"
+        }
+    }
+}

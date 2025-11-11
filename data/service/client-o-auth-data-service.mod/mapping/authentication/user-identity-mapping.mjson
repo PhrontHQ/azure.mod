@@ -3,16 +3,29 @@
         "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "UserIdentityDescriptor"},
-            "rawDataPrimaryKeys":["{localAccountId: localAccountId, tenantId: tenantId}"],
+            "rawDataPrimaryKeys":["localAccountId"],
             "objectMapping": {
                 "rules": {
+                    "idToken": {"<->": "idToken"},
+                    "idTokenClaims": {"<->": "idTokenClaims"},
                     "username": {"<->": "username"},
-                    "session": {"<-": "signInUserSession"},
+                    "accountConfirmationCode": {"<->": "accountConfirmationCode"},
+                    "isAccountConfirmed": {"<->": "isAccountConfirmed"},
+                    "needsNewConfirmationCode": {"<->": "needsNewConfirmationCode"},
+                    "isMfaEnabled": {"<->": "isMfaEnabled"},
+                    "firstName": {"<->": "firstName"},
+                    "lastName": {"<->": "lastName"},
+                    "phone": {"<->": "phone"},
+                    "tags": {"<->": "tags"},
+                    "mfaCode": {"<->": "mfaCode"},
+                    "locale": {"<->": "locale"},
+                    "timeZone": {"<->": "timeZone"},
+
                     "isAuthenticated": {"<-": "homeAccountId.defined()"},
                     "email": {"<->": "username"},
-                    "person": {
-                        "<->": "{localAccountId: localAccountId, tenantId: tenantId}",
-                        "converter": {"@": "person-converter"}
+                    "user": {
+                        "<->": "localAccountId",
+                        "converter": {"@": "userConverter"}
                     }
                 }
             },
@@ -28,19 +41,16 @@
         }
     },
 
-    "timeZoneConverter": {
-        "prototype": "mod/data/converter/time-zone-identifier-to-time-zone-converter"
-    },
 
     "UserIdentityDescriptor": {
         "object": "mod/data/model/app/user-identity.mjson"
     },
 
 
-    "person-converter": {
+    "userConverter": {
         "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "userIdentityIds.has($)"
+            "convertExpression": "id == $"
         }
     }
 

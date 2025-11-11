@@ -1,46 +1,91 @@
 {
     "root": {
-        "prototype": "mod/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/fetch-resource-data-mapping",
         "values": {
             "objectDescriptor": {"@": "PersonDescriptor"},
             "rawDataPrimaryKeys":["id"],
+            "description": "if previousFamilyName isn't explicitely set to null, undefined will lead the stack to try to get it... not ideal",
             "objectMapping": {
                 "rules": {
-                    "username": {"<->": "account.username"},
-                    "session": {"<-": "signInUserSession"},
-                    "isAuthenticated": {"<-": "account.defined()"},
-                    "email": {"<->": "account.username"},
-                    "person": {
-                        "<->": "{originAccountId: account.localAccountId, originAccountTenantId: account.tenantId}",
-                        "converter": {"@": "person-converter"}
+                    "name": {
+                        "<->": "{namePrefix: names.0.title, givenName: names.0.first, middleName: names.0.middle, familyName: names.0.last, previousFamilyName: null, nameSuffix: names.0.suffix, nickname: names.0.nickname}",
+                        "converter": {"@": "embedded-person-name-converter"}
+                    },
+                    "employmentHistory": {
+                        "<->": "positions.filter{detail.jobTitle !== ''}",
+                        "converter": {"@": "embeddedEmploymentHistoryConverter"}
                     }
                 }
             },
             "rawDataMapping": {
                 "rules": {
-                    "confirmationCode": {"<-": "accountConfirmationCode"},
-                    "password": {"<-": "password"}
                 }
             },
             "requisitePropertyNames": [
-                "username","isAuthenticated","email"
-            ]
+            ],
+            "fetchRequestMappingByOperationType": {"@": "fetchRequestMappingByOperationType"}
         }
-    },
-
-    "timeZoneConverter": {
-        "prototype": "mod/data/converter/time-zone-identifier-to-time-zone-converter"
     },
 
     "PersonDescriptor": {
         "object": "mod/data/model/party/person.mjson"
     },
 
+    "DataOperation": {
+        "object": "mod/data/service/data-operation"
+    },
 
-    "person-converter": {
-        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
+    "fetchRequestMappingByOperationType": {
+        "prototype": "global[Map]",
         "values": {
-            "convertExpression": "userIdentityIds.has($)"
+            "entries": [
+                {"@": "readOperationMappingEntry"}
+            ]
+        }
+    },
+    "readOperationMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"=": "@DataOperation.Type.ReadOperation"},
+            "value":
+                {"@": "fetchRequestMappingByCriteria"}
+        }
+    },
+    "fetchRequestMappingByCriteria": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "fetchUserByIdRequestMappingEntry"}
+            ]
+        }
+    },
+    "userByIdReadDataOperationCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+            "expression": "criteria.defined() && criteria.qualifiedProperties.length == 1 && criteria.qualifiedProperties.has('id')"
+        }
+    },
+    "fetchUserByIdRequestMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"@": "userByIdReadDataOperationCriteria"},
+            "value": {
+                "url": {"<-": "^.connection.baseURL+'/beta/users/'+criteria.parameters+'/profile'"},
+                "method": {"<-": "'GET'"},
+                "headers":  {"<-": "{Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
+            } 
+        }
+    },
+
+    "embedded-person-name-converter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "embeddedEmploymentHistoryConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
         }
     }
 

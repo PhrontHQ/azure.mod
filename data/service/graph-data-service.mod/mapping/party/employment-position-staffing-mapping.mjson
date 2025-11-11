@@ -1,0 +1,50 @@
+{
+    "root": {
+        "prototype": "mod/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "EmploymentPositionStaffingDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "description": "",
+            "objectMapping": {
+                "rules": {
+                    "title": {
+                        "<->": "detail.jobTitle"
+                    },
+                    "employmentPosition": {
+                        "<->": "positions.filter{detail.jobTitle !== ''}",
+                        "converter": {"@": "embeddedEmploymentHistoryConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "EmploymentPositionStaffingDescriptor": {
+        "object": "business.mod/data/model/employment-position-staffing.mjson"
+    },
+
+    "embeddedEmploymentHistoryConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "embeddedPhoneNumbersConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "embeddedEmailAddressesConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    }
+
+}

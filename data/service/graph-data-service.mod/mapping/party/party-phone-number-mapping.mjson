@@ -1,0 +1,23 @@
+{
+    "root": {
+        "prototype": "mod/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "PartyPhoneNumber"},
+            "objectMapping": {
+                "rules": {
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "PartyPhoneNumber": {
+        "object": "mod/data/model/messaging-channel/party-phone-number.mjson"
+    }
+
+}
