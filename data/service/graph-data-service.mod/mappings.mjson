@@ -24,7 +24,7 @@
         "object": "./mapping/messaging-channel/party-email-address-mapping.mjson"
     },
     "PartyPhoneNumberMapping": {
-        "object": "./mapping/messaging-channel/party-phone-number-mappingg.mjson"
+        "object": "./mapping/messaging-channel/party-phone-number-mapping.mjson"
     },
     "PartyPostalAddressMapping": {
         "object": "./mapping/messaging-channel/party-postal-address-mapping.mjson"
