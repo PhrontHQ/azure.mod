@@ -8,7 +8,7 @@
             "objectMapping": {
                 "rules": {
                     "organization": {
-                        "<->": "positions.filter{detail.jobTitle !== ''}",
+                        "<->": "positions.filter{detail.jobTitle != ''}",
                         "converter": {"@": "embeddedEmploymentHistoryConverter"}
                     },
                     "parentPosition": {
