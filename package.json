@@ -17,7 +17,8 @@
     "url": "PhrontHQ/azure.mod"
   },
   "dependencies": {
-    "mod": "github:PhrontHQ/mod#feature/data-model-consolidation",
+    "mod": "github:PhrontHQ/mod#main",
+    "business.mod": "github:PhrontHQ/business.mod#main",
     "@azure/msal-browser": "^4.24.1"
   },
   "devDependencies": {
