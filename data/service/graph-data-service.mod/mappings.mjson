@@ -21,16 +21,16 @@
         "object": "./mapping/employment-position-staffing-mapping.mjson"
     },
     "PartyEmailAddressMapping": {
-        "object": "./mapping/messagoing-channel/party-email-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-email-address-mapping.mjson"
     },
     "PartyPhoneNumberMapping": {
-        "object": "./mapping/messagoing-channel/party-phone-number-mappingg.mjson"
+        "object": "./mapping/messaging-channel/party-phone-number-mappingg.mjson"
     },
     "PartyPostalAddressMapping": {
-        "object": "./mapping/messagoing-channel/party-postal-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/party-postal-address-mapping.mjson"
     },
     "PostalAddressMapping": {
-        "object": "./mapping/messagoing-channel/postal-address-mapping.mjson"
+        "object": "./mapping/messaging-channel/postal-address-mapping.mjson"
     }
 
 }
