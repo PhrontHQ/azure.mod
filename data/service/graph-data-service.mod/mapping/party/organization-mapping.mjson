@@ -1,0 +1,92 @@
+{
+    "root": {
+        "prototype": "mod/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "OrganizationDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "description": "if previousFamilyName isn't explicitely set to null, undefined will lead the stack to try to get it... not ideal",
+            "objectMapping": {
+                "rules": {
+                    "name": {
+                        "<->": "{namePrefix: names.0.title, givenName: names.0.first, middleName: names.0.middle, familyName: names.0.last, previousFamilyName: null, nameSuffix: names.0.suffix, nickname: names.0.nickname}",
+                        "converter": {"@": "embedded-person-name-converter"}
+                    },
+                    "employmentHistory": {
+                        "<->": "positions.filter{detail.jobTitle != ''}",
+                        "converter": {"@": "embeddedEmploymentHistoryConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ],
+            "fetchRequestMappingByOperationType": {"@": "fetchRequestMappingByOperationType"}
+        }
+    },
+
+    "OrganizationDescriptor": {
+        "object": "mod/data/model/party/organization.mjson"
+    },
+
+    "DataOperation": {
+        "object": "mod/data/service/data-operation"
+    },
+
+    "fetchRequestMappingByOperationType": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "readOperationMappingEntry"}
+            ]
+        }
+    },
+    "readOperationMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"=": "@DataOperation.Type.ReadOperation"},
+            "value":
+                {"@": "fetchRequestMappingByCriteria"}
+        }
+    },
+    "fetchRequestMappingByCriteria": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "fetchUserByIdRequestMappingEntry"}
+            ]
+        }
+    },
+    "userByIdReadDataOperationCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+            "expression": "criteria.defined() && criteria.qualifiedProperties.length == 1 && criteria.qualifiedProperties.has('id')"
+        }
+    },
+    "fetchUserByIdRequestMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"@": "userByIdReadDataOperationCriteria"},
+            "value": {
+                "url": {"<-": "^.connection.baseURL+'/beta/users/'+criteria.parameters+'/profile'"},
+                "method": {"<-": "'GET'"},
+                "headers":  {"<-": "{Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
+            } 
+        }
+    },
+
+    "embedded-person-name-converter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "embeddedEmploymentHistoryConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    }
+
+}

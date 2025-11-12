@@ -7,22 +7,18 @@
             "description": "",
             "objectMapping": {
                 "rules": {
-                    "organization": {
-                        "<->": "positions.filter{detail.jobTitle != ''}",
-                        "converter": {"@": "embeddedEmploymentHistoryConverter"}
+                    "title": {
+                        "<->": "detail.jobTitle"
                     },
-                    "parentPosition": {
-                        "<->": "phones.group{number}.sorted{.0}.map{.1.last()}",
-                        "converter": {"@": "embeddedPhoneNumbersConverter"}
+                    "employmentPosition": {
+                        "<->": "{organization: {name: detail.company.displayName}, job:{title: detail.jobTitle}}",
+                        "converter": {"@": "embeddedEmploymentPositionConverter"}
                     },
-                    "childPositions": {
-                        "<->": "emails",
-                        "converter": {"@": "embeddedEmailAddressesConverter"}
-                    },
-                    "job": {
-                        "<->": "emails",
-                        "converter": {"@": "embeddedEmailAddressesConverter"}
+                    "postalAddresses": {
+                        "<->": "[{label: detail.company.officeLocation, messagingChannel: {name: detail.company.officeLocation, streetAddress: detail.company.address.street, locality:  detail.company.address.city, administrativeArea: detail.company.address.state, primaryPostalCode: detail.company.address.postalCode, country: (detail.company.address.countryOrRegion.defined() ? detail.company.address.countryOrRegion : 'US')}}]",
+                        "converter": {"@": "embeddedPostalAddressesConverter"}
                     }
+
                 }
             },
             "rawDataMapping": {
@@ -38,7 +34,7 @@
         "object": "business.mod/data/model/employment-position-staffing.mjson"
     },
 
-    "embeddedEmploymentHistoryConverter": {
+    "embeddedEmploymentPositionConverter": {
         "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }
@@ -50,7 +46,7 @@
         }
     },
 
-    "embeddedEmailAddressesConverter": {
+    "embeddedPostalAddressesConverter": {
         "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }

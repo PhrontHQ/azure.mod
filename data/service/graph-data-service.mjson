@@ -6,13 +6,25 @@
             "name": "AzureGraphDataService",
             "exportName": "GraphDataService",
              "types": [
-                {"@": "PersonDescriptor"}
+                {"@": "PersonDescriptor"},
+                {"@": "EmploymentPositionStaffingDescriptor"},
+                {"@": "EmploymentPositionDescriptor"},
+                {"@": "PartyPostalAddressDescriptor"}
             ],
             "mappings": {"@": "Mappings"} 
         }
     },
     "PersonDescriptor": {
         "object": "mod/data/model/party/person.mjson"
+    },
+    "EmploymentPositionStaffingDescriptor": {
+        "object": "business.mod/data/model/employment-position-staffing.mjson"
+    },
+    "EmploymentPositionDescriptor": {
+        "object": "business.mod/data/model/employment-position.mjson"
+    },
+    "PartyPostalAddressDescriptor": {
+        "object": "mod/data/model/messaging-channel/party-postal-address.mjson"
     },
 
     "Mappings": {

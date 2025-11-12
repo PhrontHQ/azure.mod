@@ -1,0 +1,60 @@
+{
+    "root": {
+        "prototype": "mod/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "EmploymentPositionDescriptor"},
+            "rawDataPrimaryKeys":["id"],
+            "description": "",
+            "objectMapping": {
+                "rules": {
+                    "organization": {
+                        "<->": "organization",
+                        "converter": {"@": "organizationConverter"}
+                    },
+                    "parentPosition": {
+                        "<->": "phones.group{number}.sorted{.0}.map{.1.last()}",
+                        "converter": {"@": "embeddedPhoneNumbersConverter"}
+                    },
+                    "childPositions": {
+                        "<->": "emails",
+                        "converter": {"@": "embeddedEmailAddressesConverter"}
+                    },
+                    "job": {
+                        "<->": "emails",
+                        "converter": {"@": "embeddedEmailAddressesConverter"}
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "EmploymentPositionDescriptor": {
+        "object": "business.mod/data/model/employment-position.mjson"
+    },
+
+    "organizationConverter": {
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "iso3166_1_alpha2Ccode == $"
+        }
+    },
+
+    "embeddedPhoneNumbersConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "embeddedEmailAddressesConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    }
+
+}
