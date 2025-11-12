@@ -8,7 +8,7 @@
             "objectMapping": {
                 "rules": {
                     "organization": {
-                        "<->": "organization",
+                        "<->": "organization.name",
                         "converter": {"@": "organizationConverter"}
                     },
                     "parentPosition": {
@@ -41,7 +41,7 @@
     "organizationConverter": {
         "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "iso3166_1_alpha2Ccode == $"
+            "convertExpression": "name == $"
         }
     },
 

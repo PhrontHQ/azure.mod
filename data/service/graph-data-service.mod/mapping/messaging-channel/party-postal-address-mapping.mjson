@@ -12,22 +12,6 @@
                     "messagingChannel": {
                         "<->": "messagingChannel",
                         "converter": {"@": "embeddedMessagingChannelConverter"}
-                    },
-                    "streetAddress": {
-                        "<->": "streetAddress"
-                    },
-                    "locality": {
-                        "<->": "locality"
-                    },
-                    "administrativeArea": {
-                        "<->": "administrativeArea"
-                    },
-                    "primaryPostalCode": {
-                        "<->": "primaryPostalCode"
-                    },
-                    "country": {
-                        "<->": "country",
-                        "converter": {"@": "countryConverter"}
                     }
                 }
             },
@@ -46,12 +30,6 @@
     "embeddedMessagingChannelConverter": {
         "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
-        }
-    },
-    "countryConverter": {
-        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
-        "values": {
-            "convertExpression": "iso3166_1_alpha2Ccode == $"
         }
     }
 
