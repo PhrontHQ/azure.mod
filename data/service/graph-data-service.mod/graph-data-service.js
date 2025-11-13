@@ -36,7 +36,7 @@ exports.GraphDataService = class GraphDataService extends HttpService {/** @lend
 
     handleReadOperation(readOperation) {
 
-           super.handleReadOperation(readOperation);
+        return super.handleReadOperation(readOperation);
             
     }
 

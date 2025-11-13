@@ -13,10 +13,6 @@
                     "employmentPosition": {
                         "<->": "{id: id, employeeId: employeeId, organization: {name: detail.company.displayName}, job:{title: detail.jobTitle}}",
                         "converter": {"@": "embeddedEmploymentPositionConverter"}
-                    },
-                    "postalAddresses": {
-                        "<->": "[{id: id, label: detail.company.officeLocation, messagingChannel: {name: detail.company.officeLocation, streetAddress: detail.company.address.street, locality:  detail.company.address.city, administrativeArea: detail.company.address.state, primaryPostalCode: detail.company.address.postalCode, country: (detail.company.address.countryOrRegion.defined() ? detail.company.address.countryOrRegion : 'US')}}]",
-                        "converter": {"@": "embeddedPostalAddressesConverter"}
                     }
 
                 }

@@ -11,17 +11,9 @@
                         "<->": "organization.name",
                         "converter": {"@": "organizationConverter"}
                     },
-                    "parentPosition": {
-                        "<->": "phones.group{number}.sorted{.0}.map{.1.last()}",
-                        "converter": {"@": "embeddedPhoneNumbersConverter"}
-                    },
-                    "childPositions": {
-                        "<->": "emails",
-                        "converter": {"@": "embeddedEmailAddressesConverter"}
-                    },
                     "job": {
-                        "<->": "emails",
-                        "converter": {"@": "embeddedEmailAddressesConverter"}
+                        "<->": "job",
+                        "converter": {"@": "embeddedJobConverter"}
                     }
                 }
             },
@@ -45,13 +37,22 @@
         }
     },
 
-    "embeddedPhoneNumbersConverter": {
-        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+    "parentPositionConverter": {
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
+            "convertExpression": "userId == $"
         }
     },
 
-    "embeddedEmailAddressesConverter": {
+    "childPositionsConverter": {
+        "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
+        "values": {
+            "convertExpression": "userId == $"
+        }
+    },
+
+
+    "embeddedJobConverter": {
         "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }
