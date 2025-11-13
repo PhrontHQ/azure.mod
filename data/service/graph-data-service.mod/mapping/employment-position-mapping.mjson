@@ -1,6 +1,6 @@
 {
     "root": {
-        "prototype": "mod/data/service/expression-data-mapping",
+        "prototype": "mod/data/service/fetch-resource-data-mapping",
         "values": {
             "objectDescriptor": {"@": "EmploymentPositionDescriptor"},
             "rawDataPrimaryKeys":["id"],
@@ -10,6 +10,14 @@
                     "organization": {
                         "<->": "organization.name",
                         "converter": {"@": "organizationConverter"}
+                    },
+                    "parentPosition": {
+                        "<->": "employeeId",
+                        "converter": {"@": "parentPositionConverter"}
+                    },
+                    "childPositions": {
+                        "<->": "employeeId",
+                        "converter": {"@": "childPositionsConverter"}
                     },
                     "job": {
                         "<->": "job",
@@ -22,12 +30,77 @@
                 }
             },
             "requisitePropertyNames": [
-            ]
+            ],
+            "fetchRequestMappingByOperationType": {"@": "fetchRequestMappingByOperationType"}
         }
     },
 
     "EmploymentPositionDescriptor": {
         "object": "business.mod/data/model/employment-position.mjson"
+    },
+
+    "DataOperation": {
+        "object": "mod/data/service/data-operation"
+    },
+
+    "fetchRequestMappingByOperationType": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "readOperationMappingEntry"}
+            ]
+        }
+    },
+    "readOperationMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"=": "@DataOperation.Type.ReadOperation"},
+            "value":
+                {"@": "fetchRequestMappingByCriteria"}
+        }
+    },
+    "fetchRequestMappingByCriteria": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "fetchUserManagementRequestMappingEntry"},
+                {"@": "fetchUserDirectReportsRequestMappingEntry"}
+            ]
+        }
+    },
+    "userManagementReadDataOperationCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+            "expression": "criteria.defined() && criteria.qualifiedProperties.length == 1 && criteria.qualifiedProperties.has('employeeId')"
+        }
+    },
+    "fetchUserManagementRequestMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"@": "userManagementReadDataOperationCriteria"},
+            "value": {
+                "url": {"<-": "^.connection.baseURL+'/1.0/users/'+criteria.parameters+'?$expand=manager($levels=max)'"},
+                "method": {"<-": "'GET'"},
+                "headers":  {"<-": "{ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
+            } 
+        }
+    },
+    "userDirectReportsReadDataOperationCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+            "expression": "criteria.defined() && criteria.qualifiedProperties.length == 1 && criteria.qualifiedProperties.has('managerId')"
+        }
+    },
+    "fetchUserDirectReportsRequestMappingEntry": {
+        "prototype": "global[Object]",
+        "values": {
+            "key": {"@": "userDirectReportsReadDataOperationCriteria"},
+            "value": {
+                "url": {"<-": "^.connection.baseURL+'/v1.0/users/'+criteria.parameters+'/directReports'"},
+                "method": {"<-": "'GET'"},
+                "headers":  {"<-": "{ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
+            } 
+        }
     },
 
     "organizationConverter": {
@@ -40,14 +113,14 @@
     "parentPositionConverter": {
         "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "userId == $"
+            "convertExpression": "employeeId == $"
         }
     },
 
     "childPositionsConverter": {
         "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "userId == $"
+            "convertExpression": "managerId == $"
         }
     },
 
