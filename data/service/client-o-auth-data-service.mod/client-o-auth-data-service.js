@@ -234,10 +234,9 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
 
         //TODO: The scopes should be part of the readOperation's criteria
 
-        let accessTokenRawData, readOperationError;
-
+        let accessTokenRawData, readOperationError, accessTokenRequest;
         this._msalInstancePromise.then((msalInstance) => {
-            const accessTokenRequest = {
+            accessTokenRequest = {
                 scopes: /*["User.Read"] - "User.ReadWrite"*/
                         ["openid", "profile", "User.Read", "email"],
                 account: this._msalInstance.getAllAccounts()[0],
@@ -256,7 +255,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             readOperationError = error;
             if (error instanceof InteractionRequiredAuthError) {
                 // fallback to interaction when silent call fails
-                return this._msalInstance.acquireTokenRedirect(request)
+                return this._msalInstance.acquireTokenRedirect(accessTokenRequest)
                 .then(tokenResponse => {
                     // Do something with the tokenResponse
                     accessTokenRawData = tokenResponse;
