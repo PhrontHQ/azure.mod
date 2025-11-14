@@ -12,7 +12,7 @@
                         "converter": {"@": "embedded-person-name-converter"}
                     },
                     "employmentHistory": {
-                        "<->": "positions.filter{detail.jobTitle != ''}.map{{id: id, employeeId: ^this['account@odata.context'].split(\"'\")[1], detail: detail}}",
+                        "<->": "positions.filter{allowedAudiences == 'organization'}.map{{id: id, employeeId: ^this['account@odata.context'].split(\"'\")[1], detail: detail}}",
                         "converter": {"@": "embeddedEmploymentHistoryConverter"}
                     }
                 }
