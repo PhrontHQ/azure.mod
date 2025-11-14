@@ -9,7 +9,6 @@
                     "idToken": {"<->": "idToken"},
                     "idTokenClaims": {"<->": "idTokenClaims"},
                     "username": {"<->": "username"},
-                    "accountConfirmationCode": {"<->": "accountConfirmationCode"},
                     "isAccountConfirmed": {"<->": "isAccountConfirmed"},
                     "needsNewConfirmationCode": {"<->": "needsNewConfirmationCode"},
                     "isMfaEnabled": {"<->": "isMfaEnabled"},
@@ -31,8 +30,6 @@
             },
             "rawDataMapping": {
                 "rules": {
-                    "confirmationCode": {"<-": "accountConfirmationCode"},
-                    "password": {"<-": "password"}
                 }
             },
             "requisitePropertyNames": [
