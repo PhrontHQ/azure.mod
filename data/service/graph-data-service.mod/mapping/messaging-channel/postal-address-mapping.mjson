@@ -2,8 +2,8 @@
     "root": {
         "prototype": "mod/data/service/expression-data-mapping",
         "values": {
-            "objectDescriptor": {"@": "PartyEmailAddressDescriptor"},
-            "rawDataPrimaryKeys":["id"],
+            "objectDescriptor": {"@": "PostalAddressDescriptor"},
+            "rawDataPrimaryKeys":["streetAddress+locality+primaryPostalCode+administrativeArea"],
             "objectMapping": {
                 "rules": {
                     "label": {
@@ -24,10 +24,6 @@
                     },
                     "primaryPostalCode": {
                         "<->": "primaryPostalCode"
-                    },
-                    "country": {
-                        "<->": "country",
-                        "converter": {"@": "countryConverter"}
                     }
                 }
             },
@@ -40,8 +36,8 @@
         }
     },
 
-    "PartyEmailAddressDescriptor": {
-        "object": "mod/data/model/messaging-channel/party-email-address.mjson"
+    "PostalAddressDescriptor": {
+        "object": "mod/data/model/messaging-channel/postal-address.mjson"
     },
     "embeddedMessagingChannelConverter": {
         "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
