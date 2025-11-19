@@ -31,7 +31,8 @@
             },
             "requisitePropertyNames": [
             ],
-            "fetchRequestMappingByOperationType": {"@": "fetchRequestMappingByOperationType"}
+            "fetchRequestMappingByOperationType": {"@": "fetchRequestMappingByOperationType"},
+            "fetchResponseRawDataMappingExpressionByCriteria": {"@": "fetchResponseRawDataMappingExpressionByCriteria"}
         }
     },
 
@@ -63,23 +64,23 @@
         "prototype": "global[Map]",
         "values": {
             "entries": [
-                {"@": "fetchUserManagementRequestMappingEntry"},
+                {"@": "fetchUserManagementChainRequestMappingEntry"},
                 {"@": "fetchUserDirectReportsRequestMappingEntry"}
             ]
         }
     },
-    "userManagementReadDataOperationCriteria": {
+    "UserManagementChainReadDataOperationCriteria": {
         "prototype": "mod/core/criteria",
         "values": {
-            "expression": "criteria.defined() && criteria.qualifiedProperties.length == 1 && criteria.qualifiedProperties.has('employeeId')"
+            "expression": "data.readExpressions.defined() && data.readExpressions.length == 1 && data.readExpressions.has('parentPosition')"
         }
     },
-    "fetchUserManagementRequestMappingEntry": {
+    "fetchUserManagementChainRequestMappingEntry": {
         "prototype": "global[Object]",
         "values": {
-            "key": {"@": "userManagementReadDataOperationCriteria"},
+            "key": {"@": "UserManagementChainReadDataOperationCriteria"},
             "value": {
-                "url": {"<-": "^.connection.baseURL+'/1.0/users/'+criteria.parameters+'?$expand=manager($levels=max)'"},
+                "url": {"<-": "^.connection.baseURL+'/1.0/users/'+criteria.parameters.id+'?$expand=manager($levels=max;$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country)&$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country'"},
                 "method": {"<-": "'GET'"},
                 "headers":  {"<-": "{ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
             } 
@@ -88,7 +89,7 @@
     "userDirectReportsReadDataOperationCriteria": {
         "prototype": "mod/core/criteria",
         "values": {
-            "expression": "criteria.defined() && criteria.qualifiedProperties.length == 1 && criteria.qualifiedProperties.has('managerId')"
+            "expression": "data.readExpressions.defined() && data.readExpressions.length == 1 && data.readExpressions.has('childPositions')"
         }
     },
     "fetchUserDirectReportsRequestMappingEntry": {
@@ -96,12 +97,56 @@
         "values": {
             "key": {"@": "userDirectReportsReadDataOperationCriteria"},
             "value": {
-                "url": {"<-": "^.connection.baseURL+'/v1.0/users/'+criteria.parameters+'/directReports'"},
+                "url": {"<-": "^.connection.baseURL+'/v1.0/users/'+criteria.parameters.id+'/directReports?$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country'"},
                 "method": {"<-": "'GET'"},
                 "headers":  {"<-": "{ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
             } 
         }
     },
+
+    "fetchResponseRawDataMappingExpressionByCriteria": {
+        "prototype": "global[Map]",
+        "values": {
+            "entries": [
+                {"@": "UserManagementChainResponseMappingEntry"},
+                {"@": "userDirectReportsResponseMappingEntry"}
+            ]
+        }
+    },
+
+    "UserManagementChainResponseMappingEntry": {
+        "prototype":"global[Object]",
+        "values": {
+            "key": {"@": "userManagementChainResponseCriteria"},
+            "value": "this.processElements"
+        }
+    },
+
+    "userManagementChainResponseCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+            "expression": "this['@odata.context'].contains('manager(')"
+        }
+    },
+
+
+    "userDirectReportsResponseMappingEntry": {
+        "prototype":"global[Object]",
+        "values": {
+            "key": {"@": "userDirectReportsResponseCriteria"},
+            "value": "this.processElements"
+        }
+    },
+
+    "userDirectReportsResponseCriteria": {
+        "prototype": "mod/core/criteria",
+        "values": {
+            "expression": "this['@odata.context'].contains('directoryObjects')"
+        }
+    },
+
+
+
 
     "organizationConverter": {
         "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",

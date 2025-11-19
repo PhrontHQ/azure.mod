@@ -24,6 +24,10 @@
                     },
                     "primaryPostalCode": {
                         "<->": "primaryPostalCode"
+                    },
+                    "country": {
+                        "<->": "country",
+                        "converter": {"@": "countryConverter"}
                     }
                 }
             },
@@ -47,7 +51,7 @@
     "countryConverter": {
         "prototype": "mod/data/converter/raw-foreign-value-to-object-converter",
         "values": {
-            "convertExpression": "iso3166_1_alpha2Ccode == $"
+            "convertExpression": "iso3166_1_alpha3Ccode == $"
         }
     }
 

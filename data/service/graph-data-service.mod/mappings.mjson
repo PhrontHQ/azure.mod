@@ -3,6 +3,7 @@
         "value": [
             {"@": "PersonMapping"},
             {"@": "EmploymentPositionMapping"},
+            {"@": "JobMapping"},
             {"@": "EmploymentPositionStaffingMapping"},
             {"@": "PartyEmailAddressMapping"},
             {"@": "PartyPhoneNumberMapping"},
@@ -16,6 +17,9 @@
     },
     "EmploymentPositionMapping": {
         "object": "./mapping/employment-position-mapping.mjson"
+    },
+    "JobMapping": {
+        "object": "./mapping/job-mapping.mjson"
     },
     "EmploymentPositionStaffingMapping": {
         "object": "./mapping/employment-position-staffing-mapping.mjson"

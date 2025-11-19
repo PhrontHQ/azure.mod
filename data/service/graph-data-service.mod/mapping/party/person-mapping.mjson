@@ -8,11 +8,11 @@
             "objectMapping": {
                 "rules": {
                     "name": {
-                        "<->": "{namePrefix: names.0.title, givenName: names.0.first, middleName: names.0.middle, familyName: names.0.last, previousFamilyName: null, nameSuffix: names.0.suffix, nickname: names.0.nickname}",
+                        "<->": "{namePrefix: null, givenName: givenName, middleName: null, familyName: surname, previousFamilyName: null, nameSuffix: null, nickname: null}",
                         "converter": {"@": "embedded-person-name-converter"}
                     },
                     "employmentHistory": {
-                        "<->": "positions.filter{allowedAudiences == 'organization'}.map{{id: id, employeeId: ^this['account@odata.context'].split(\"'\")[1], detail: detail}}",
+                        "<->": "[{id: id, employeeId: id, jobTitle: jobTitle, employmentPosition: {id: id, employeeId: id, organization: {name: companyName}, job: {title: jobTitle}}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}]}]",
                         "converter": {"@": "embeddedEmploymentHistoryConverter"}
                     }
                 }
@@ -70,7 +70,7 @@
         "values": {
             "key": {"@": "userByIdReadDataOperationCriteria"},
             "value": {
-                "url": {"<-": "^.connection.baseURL+'/beta/users/'+criteria.parameters+'/profile'"},
+                "url": {"<-":"^.connection.baseURL+'/v1.0/users/'+criteria.parameters+'?$select=id,employeeId,aboutMe,title,givenName,surname,preferredLanguage,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country,mailNickname,mail,mobilePhone,birthday,businessPhones,employeeHireDate,employeeOrgData,employeeType,hireDate,pastProjects,refreshTokensValidFromDateTime,signInSessionsValidFromDateTime,responsibilities,schools,skills'"},
                 "method": {"<-": "'GET'"},
                 "headers":  {"<-": "{Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
             } 

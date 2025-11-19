@@ -1,0 +1,27 @@
+{
+    "root": {
+        "prototype": "mod/data/service/expression-data-mapping",
+        "values": {
+            "objectDescriptor": {"@": "JobDescriptor"},
+            "rawDataPrimaryKeys":["title"],
+            "description": "",
+            "objectMapping": {
+                "rules": {
+                    "title": {
+                        "<->": "title"
+                    }
+                }
+            },
+            "rawDataMapping": {
+                "rules": {
+                }
+            },
+            "requisitePropertyNames": [
+            ]
+        }
+    },
+
+    "JobDescriptor": {
+        "object": "business.mod/data/model/job.mjson"
+    }
+}

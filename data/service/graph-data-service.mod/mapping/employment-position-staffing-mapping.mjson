@@ -4,18 +4,18 @@
         "values": {
             "objectDescriptor": {"@": "EmploymentPositionStaffingDescriptor"},
             "rawDataPrimaryKeys":["id"],
-            "description": "",
+            "description": "https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-beta#properties",
             "objectMapping": {
                 "rules": {
                     "title": {
-                        "<->": "detail.jobTitle"
+                        "<->": "jobTitle"
                     },
                     "employmentPosition": {
-                        "<->": "{id: id, employeeId: employeeId, organization: {name: detail.company.displayName}, job:{title: detail.jobTitle}}",
+                        "<->": "employmentPosition",
                         "converter": {"@": "embeddedEmploymentPositionConverter"}
                     },
                     "postalAddresses": {
-                        "<->": "[{id: id, label: detail.company.officeLocation, messagingChannel: {name: detail.company.officeLocation, streetAddress: detail.company.address.street, locality:  detail.company.address.city, administrativeArea: detail.company.address.state, primaryPostalCode: detail.company.address.postalCode, country: (detail.company.address.countryOrRegion.defined() ? detail.company.address.countryOrRegion : 'US')}}]",
+                        "<->": "postalAddresses",
                         "converter": {"@": "embeddedPostalAddressesConverter"}
                     }
 

@@ -7,7 +7,9 @@ const HttpService = require("mod/data/service/http-service").HttpService,
 /**
 * 
 * Doc to look at to implement handling refresh tokens:
-*  https://developer.whoop.com/docs/tutorials/refresh-token-javascript/
+* https://developer.whoop.com/docs/tutorials/refresh-token-javascript/
+*
+* https://learn.microsoft.com/en-us/graph/aad-advanced-queries?tabs=http
 *
 * @class
 * @extends HttpService
