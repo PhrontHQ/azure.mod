@@ -17,6 +17,10 @@
                     "postalAddresses": {
                         "<->": "postalAddresses",
                         "converter": {"@": "embeddedPostalAddressesConverter"}
+                    },
+                    "emailAddresses": {
+                        "<->": "emailAddresses",
+                        "converter": {"@": "embeddedEmailAddressesConverter"}
                     }
 
                 }
@@ -47,6 +51,12 @@
     },
 
     "embeddedPostalAddressesConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "embeddedEmailAddressesConverter": {
         "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }
