@@ -11,10 +11,6 @@
                         "<->": "organization.name",
                         "converter": {"@": "organizationConverter"}
                     },
-                    "parentPosition": {
-                        "<->": "employeeId",
-                        "converter": {"@": "parentPositionConverter"}
-                    },
                     "childPositions": {
                         "<->": "employeeId",
                         "converter": {"@": "childPositionsConverter"}
@@ -22,6 +18,10 @@
                     "job": {
                         "<->": "job",
                         "converter": {"@": "embeddedJobConverter"}
+                    },
+                    "staffingHistory": {
+                        "<->": "staffingHistory",
+                        "converter": {"@": "embeddedStaffingHistoryConverter"}
                     }
                 }
             },
@@ -80,9 +80,9 @@
         "values": {
             "key": {"@": "UserManagementChainReadDataOperationCriteria"},
             "value": {
-                "url": {"<-": "^.connection.baseURL+'/1.0/users/'+criteria.parameters.id+'?$expand=manager($levels=max;$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country)&$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country'"},
+                "url": {"<-": "^.connection.baseURL+'/v1.0/users/'+criteria.parameters.id+'/?$expand=manager($levels=max;$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country)&$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country'"},
                 "method": {"<-": "'GET'"},
-                "headers":  {"<-": "{ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
+                "headers":  {"<-": "{SdkVersion: 'GraphExplorer/4.0, graph-js/3.0.7 (featureUsage=6)', Referer: 'https://developer.microsoft.com/', prefer: 'ms-graph-dev-mode', Origin: 'https://developer.microsoft.com', ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
             } 
         }
     },
@@ -97,9 +97,9 @@
         "values": {
             "key": {"@": "userDirectReportsReadDataOperationCriteria"},
             "value": {
-                "url": {"<-": "^.connection.baseURL+'/v1.0/users/'+criteria.parameters.id+'/directReports?$select=id,givenName,surname,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country'"},
+                "url": {"<-": "^.connection.baseURL+'/v1.0/users/'+criteria.parameters.id+'/directReports/?$select=id,givenName,surname,preferredLanguage,companyName,department,jobTitle,officeLocation,streetAddress,city,state,postalCode,country,mail,businessPhones'"},
                 "method": {"<-": "'GET'"},
-                "headers":  {"<-": "{ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
+                "headers":  {"<-": "{SdkVersion: 'GraphExplorer/4.0, graph-js/3.0.7 (featureUsage=6)', Referer: 'https://developer.microsoft.com/', prefer: 'ms-graph-dev-mode', Origin: 'https://developer.microsoft.com', ConsistencyLevel: 'eventual', Content-Type: 'application/x-www-form-urlencoded', Authorization: accessToken.tokenType + ' ' + accessToken.accessToken}"}
             } 
         }
     },
@@ -118,7 +118,7 @@
         "prototype":"global[Object]",
         "values": {
             "key": {"@": "userManagementChainResponseCriteria"},
-            "value": "this.processElements"
+            "value": "{id: id, organization: {name: companyName}, job: {title: jobTitle}, staffingHistory:[{id: id, employeeId: id, jobTitle: jobTitle, employee: {name: {namePrefix: null, givenName: givenName, middleName: null, familyName: surname, previousFamilyName: null, nameSuffix: null, nickname: null}}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}], emailAddresses:[{id: id, label:'Work email', messagingChannel:{email: mail}}], phoneNumbers:businessPhones.map{{id: ^id, label:'Work phone', messagingChannel:{number: this}}}}]}"
         }
     },
 
@@ -134,7 +134,7 @@
         "prototype":"global[Object]",
         "values": {
             "key": {"@": "userDirectReportsResponseCriteria"},
-            "value": "this.processElements"
+            "value": "this.value.map{{id: id, organization: {name: companyName}, job: {title: jobTitle}, staffingHistory:[{id: id, employeeId: id, jobTitle: jobTitle, employee: {name: {namePrefix: null, givenName: givenName, middleName: null, familyName: surname, previousFamilyName: null, nameSuffix: null, nickname: null}}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}], emailAddresses:[{id: id, label:'Work email', messagingChannel:{email: mail}}], phoneNumbers:businessPhones.map{{id: ^id, label:'Work phone', messagingChannel:{number: this}}}}]}}"
         }
     },
 
@@ -171,6 +171,12 @@
 
 
     "embeddedJobConverter": {
+        "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
+        "values": {
+        }
+    },
+
+    "embeddedStaffingHistoryConverter": {
         "prototype": "mod/data/converter/raw-embedded-value-to-object-converter",
         "values": {
         }
