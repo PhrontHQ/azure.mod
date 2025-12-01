@@ -30,6 +30,7 @@
                 }
             },
             "requisitePropertyNames": [
+                "organization"
             ],
             "fetchRequestMappingByOperationType": {"@": "fetchRequestMappingByOperationType"},
             "fetchResponseRawDataMappingExpressionByCriteria": {"@": "fetchResponseRawDataMappingExpressionByCriteria"}
