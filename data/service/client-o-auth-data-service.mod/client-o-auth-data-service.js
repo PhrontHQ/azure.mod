@@ -144,7 +144,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
     _handleAuthResponse = async (response) => {
         const loginRequest = {
             scopes: /*["User.Read"] - "User.ReadWrite"*/
-                    ["openid", "profile", "User.Read", "email"]
+                    ["openid", "profile", "User.Read.All", "email"]
 
         };
         try {
@@ -238,7 +238,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
         this._msalInstancePromise.then((msalInstance) => {
             accessTokenRequest = {
                 scopes: /*["User.Read"] - "User.ReadWrite"*/
-                        ["openid", "profile", "User.Read", "email"],
+                        ["openid", "profile", "User.Read.All", "email"],
                 account: this._msalInstance.getAllAccounts()[0],
                 redirectUri: this.connectionDescriptor.auth.redirectURI
             };
