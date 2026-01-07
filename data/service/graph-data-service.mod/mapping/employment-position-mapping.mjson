@@ -143,7 +143,7 @@
         "prototype":"global[Object]",
         "values": {
             "key": {"@": "userDirectReportsResponseCriteria"},
-            "value": "this.value.map{{id: id, organization: {name: companyName}, job: {title: jobTitle}, staffingHistory:[{id: id, employeeId: id, jobTitle: jobTitle, employee: {id: id, name: {namePrefix: null, givenName: givenName, middleName: null, familyName: surname, previousFamilyName: null, nameSuffix: null, nickname: null}}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}], emailAddresses:[{id: id, label:'Work email', messagingChannel:{email: mail}}], phoneNumbers:businessPhones.map{{id: ^id, label:'Work phone', messagingChannel:{number: this}}}}]}}"
+            "value": "this.value.map{{id: id, organization: {name: companyName}, job: {title: jobTitle}, staffingHistory:[{id: id, employeeId: id, jobTitle: jobTitle, employee: {id: id, namePrefix: null, givenName: givenName, middleName: null, surname: surname, previousFamilyName: null, nameSuffix: null, nickname: null}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}], emailAddresses:[{id: id, label:'Work email', messagingChannel:{email: mail}}], phoneNumbers:businessPhones.map{{id: ^id, label:'Work phone', messagingChannel:{number: this}}}}]}}"
         }
     },
 
@@ -203,7 +203,7 @@
     "parentPositionExpressionConverter": {
         "prototype": "mod/core/converter/expression-converter",
         "values": {
-            "convertExpression": "{id: id, organization: {name: companyName}, manager: manager, job: {title: jobTitle}, staffingHistory:[{id: id, employeeId: id, jobTitle: jobTitle, employee: {name: {namePrefix: null, givenName: givenName, middleName: null, familyName: surname, previousFamilyName: null, nameSuffix: null, nickname: null}}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}], emailAddresses:[{id: id, label:'Work email', messagingChannel:{email: mail}}], phoneNumbers:businessPhones.map{{id: ^id, label:'Work phone', messagingChannel:{number: this}}}}]}"
+            "convertExpression": "{id: id, originDataSnapshot: {AzureGraphDataService: this}, organization: {name: companyName}, manager: manager, job: {title: jobTitle}, staffingHistory:[{id: id, employeeId: id, jobTitle: jobTitle, employee: {id: id, namePrefix: null, givenName: givenName, middleName: null, surname: surname, previousFamilyName: null, nameSuffix: null, nickname: null}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}], emailAddresses:[{id: id, label:'Work email', messagingChannel:{email: mail}}], phoneNumbers:businessPhones.map{{id: ^id, label:'Work phone', messagingChannel:{number: this}}}}]}"
         }
     },
 
