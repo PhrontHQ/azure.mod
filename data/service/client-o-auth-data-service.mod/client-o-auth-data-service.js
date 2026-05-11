@@ -240,7 +240,8 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
                 scopes: /*["User.Read"] - "User.ReadWrite"*/
                         ["openid", "profile", "User.Read.All", "email"],
                 account: this._msalInstance.getAllAccounts()[0],
-                redirectUri: this.connectionDescriptor.auth.silentRedirectURI || this.connectionDescriptor.auth.redirectURI
+                redirectUri: this.connectionDescriptor.auth.silentRedirectURI || this.connectionDescriptor.auth.redirectURI,
+                forceRefresh: false //True will force a call to the network to get a brand new auth token even if the current one is valid
             };
 
             return this._msalInstance.acquireTokenSilent(accessTokenRequest)
