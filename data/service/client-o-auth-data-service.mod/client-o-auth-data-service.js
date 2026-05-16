@@ -240,7 +240,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
                 scopes: /*["User.Read"] - "User.ReadWrite"*/
                         ["openid", "profile", "User.Read.All", "email"],
                 account: this._msalInstance.getAllAccounts()[0],
-                redirectUri: this.connectionDescriptor.auth.silentRedirectURI || this.connectionDescriptor.auth.redirectURI,
+                redirectUri: this.connectionDescriptor.auth.silentRedirectUri || this.connectionDescriptor.auth.redirectUri,
                 forceRefresh: false //True will force a call to the network to get a brand new auth token even if the current one is valid
             };
 
@@ -256,7 +256,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             readOperationError = error;
             if (error instanceof InteractionRequiredAuthError) {
                 // fallback to interaction when silent call fails
-                accessTokenRequest.redirectUri = this.connectionDescriptor.auth.redirectURI;
+                accessTokenRequest.redirectUri = this.connectionDescriptor.auth.redirectUri;
                 return this._msalInstance.acquireTokenRedirect(accessTokenRequest)
                 .then(tokenResponse => {
                     // Do something with the tokenResponse
