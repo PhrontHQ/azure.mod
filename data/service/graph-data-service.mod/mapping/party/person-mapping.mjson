@@ -12,7 +12,7 @@
                         "converter": {"@": "embedded-person-name-converter"}
                     },
                     "employmentHistory": {
-                        "<->": "[{id: id, employeeId: id, jobTitle: jobTitle, employmentPosition: {id: id, employeeId: id, organization: {name: companyName}, job: {title: jobTitle}}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}]}]",
+                        "<->": "[{id: id, employeeId: id, jobTitle: jobTitle, employmentPosition: {id: id, employeeId: id, organization: {name: companyName}, job: {id: id, title: jobTitle}}, postalAddresses: [{id: id, label: officeLocation, messagingChannel: {name: officeLocation, streetAddress: streetAddress, locality: city, administrativeArea: state, primaryPostalCode: postalCode, country: country}}]}]",
                         "converter": {"@": "embeddedEmploymentHistoryConverter"}
                     }
                 }

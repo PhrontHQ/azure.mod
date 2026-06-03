@@ -3,7 +3,7 @@
         "prototype": "mod/data/service/expression-data-mapping",
         "values": {
             "objectDescriptor": {"@": "JobDescriptor"},
-            "rawDataPrimaryKeys":["title"],
+            "rawDataPrimaryKeys":["id"],
             "description": "",
             "objectMapping": {
                 "rules": {
