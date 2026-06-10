@@ -211,6 +211,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             it might be simpler, but probably a bit less efficient
 
         */
+       console.log("HttpService ClientOAuthDataService handleOAuthAccessTokenReadOperation", readOperation.id, readOperation.referrerId);
         readOperationCompletionPromise = this.callDelegateMethod("rawDataServiceWillHandleReadOperation", this, readOperation);
         if(readOperationCompletionPromise) {
             readOperationCompletionPromise = readOperationCompletionPromise.then((readOperation) => {
@@ -270,8 +271,17 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             // handle other errors
         })
         .finally(() => {
-            let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
-            responseOperation.target.dispatchEvent(responseOperation);
+            console.log("ClientOAuthDataService.complete Access Token Request", readOperation.id, readOperation);
+            let responseOperation;
+            if (readOperation.referrer) {
+                responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
+                responseOperation.target.dispatchEvent(responseOperation);
+            }  
+            // else {
+                responseOperation = this.responseOperationForReadOperation(readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
+                responseOperation.target.dispatchEvent(responseOperation);
+            // }
+            
         });
     }
 
