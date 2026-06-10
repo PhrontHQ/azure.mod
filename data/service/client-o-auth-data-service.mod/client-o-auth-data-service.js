@@ -119,7 +119,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
                 readOperationError = error;
             })
             .finally(() => {
-                let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
+                let responseOperation = this.responseOperationForReadOperation(this.relevantOperationForResponse(readOperation), readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
                 responseOperation.target.dispatchEvent(responseOperation);
             })
 
@@ -270,7 +270,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             // handle other errors
         })
         .finally(() => {
-            let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
+            let responseOperation = this.responseOperationForReadOperation(readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
             responseOperation.target.dispatchEvent(responseOperation);
         });
     }
