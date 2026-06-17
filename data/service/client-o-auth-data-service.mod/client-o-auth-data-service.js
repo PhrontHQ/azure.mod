@@ -119,7 +119,7 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
                 readOperationError = error;
             })
             .finally(() => {
-                let responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
+                let responseOperation = this.responseOperationForReadOperation(this.relevantOperationForResponse(readOperation), readOperationError ? readOperationError : null, readOperationError ? null : userAccount);
                 responseOperation.target.dispatchEvent(responseOperation);
             })
 
@@ -274,10 +274,15 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
             console.log("ClientOAuthDataService.complete Access Token Request", readOperation.id, readOperation);
             let responseOperation;
             if (readOperation.referrer) {
-                responseOperation = this.responseOperationForReadOperation(readOperation.referrer ? readOperation.referrer : readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
+                responseOperation = this.responseOperationForReadOperation(this.relevantOperationForResponse(readOperation), readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
                 responseOperation.target.dispatchEvent(responseOperation);
             }  
             // else {
+                this.count = this.count || 0;
+                this.count++;
+                if (this.count > 10) {
+                    return;
+                }
                 responseOperation = this.responseOperationForReadOperation(readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
                 responseOperation.target.dispatchEvent(responseOperation);
             // }
