@@ -273,18 +273,24 @@ exports.ClientOAuthDataService = class ClientOAuthDataService extends ModClientO
         .finally(() => {
             console.log("ClientOAuthDataService.complete Access Token Request", readOperation.id, readOperation);
             let responseOperation;
-            if (readOperation.referrer) {
-                responseOperation = this.responseOperationForReadOperation(this.relevantOperationForResponse(readOperation), readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
-                responseOperation.target.dispatchEvent(responseOperation);
-            }  
-            // else {
-                this.count = this.count || 0;
-                this.count++;
-                if (this.count > 10) {
-                    return;
-                }
+            // let relevantOperation = this.relevantOperationForResponse(readOperation);
+
+            // responseOperation = this.responseOperationForReadOperation(relevantOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
+            // responseOperation.target.dispatchEvent(responseOperation);
+
+            // if (relevantOperation !== readOperation) {
                 responseOperation = this.responseOperationForReadOperation(readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
                 responseOperation.target.dispatchEvent(responseOperation);
+            // }
+
+            // // else {
+            //     this.count = this.count || 0;
+            //     this.count++;
+            //     if (this.count > 10) {
+            //         return;
+            //     }
+                // responseOperation = this.responseOperationForReadOperation(readOperation, readOperationError ? readOperationError : null, readOperationError ? null : accessTokenRawData);
+                // responseOperation.target.dispatchEvent(responseOperation);
             // }
             
         });
